@@ -43,15 +43,16 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    // ✅ Firebase
+    // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
+    // Add Firebase dependencies without version numbers
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-storage") // এইটা add করুন
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-firestore")
 
-    // ✅ Glide for image loading (এইটা add করুন)
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation(libs.firebase.storage)
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
     testImplementation(libs.junit)

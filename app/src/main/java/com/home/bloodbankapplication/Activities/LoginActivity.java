@@ -2,86 +2,118 @@ package com.home.bloodbankapplication.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.home.bloodbankapplication.R;
 
 public class LoginActivity extends AppCompatActivity {
-
-    private EditText usernameEt, passwordEt;
+    private EditText mobileEt, passwordEt;
     private Button loginButton;
-    private TextView signUpText;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firestore;
 
-    private DatabaseReference databaseReference;
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Donors");
-
-        usernameEt = findViewById(R.id.username);
-        passwordEt = findViewById(R.id.password);
+        mobileEt = findViewById(R.id.username);     // your EditText id
+        passwordEt = findViewById(R.id.password);   // your EditText id
         loginButton = findViewById(R.id.login_button);
-        signUpText = findViewById(R.id.sign_up_text);
 
-        loginButton.setOnClickListener(v -> {
-            String mobile = usernameEt.getText().toString().trim();
-            String password = passwordEt.getText().toString().trim();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
-            if (mobile.isEmpty() || password.isEmpty()) {
-                showMessage("Please enter mobile number and password");
-                return;
-            }
-
-            // Check donor in Firebase
-            databaseReference.orderByChild("mobile").equalTo(mobile)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                for (DataSnapshot donorSnapshot : snapshot.getChildren()) {
-                                    String dbPassword = donorSnapshot.child("password").getValue(String.class);
-                                    if (dbPassword != null && dbPassword.equals(password)) {
-                                        // Login successful
-                                        showMessage("Login successful!");
-                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                        finish();
-                                        return;
-                                    }
-                                }
-                                showMessage("Invalid password");
-                            } else {
-                                showMessage("Donor not found");
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            showMessage("Database error: " + error.getMessage());
-                        }
-                    });
-        });
-
-        // Sign up text click
-        signUpText.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
-        });
+        loginButton.setOnClickListener(v -> performLogin());
     }
 
-    private void showMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    private void performLogin() {
+        String mobile = mobileEt.getText().toString().trim();
+        String password = passwordEt.getText().toString().trim();
+
+        if (mobile.isEmpty() || password.isEmpty()) {
+            showToast("Please enter mobile number and password");
+            return;
+        }
+        if (mobile.length() != 11) {
+            showToast("Mobile number must be 11 digits");
+            return;
+        }
+
+        String fakeEmail = mobile + "@myapp.com";
+
+        firebaseAuth.signInWithEmailAndPassword(fakeEmail, password)
+                .addOnCompleteListener(this, new com.google.android.gms.tasks.OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if (user != null) {
+                                String uid = user.getUid();
+                                fetchDonorDataAndProceed(uid);
+                            } else {
+                                Log.e(TAG, "Login succeeded but user is null");
+                                showToast("Login failed: unknown error");
+                            }
+                        } else {
+                            Log.e(TAG, "Login failed: " + (task.getException() != null ? task.getException().getMessage() : ""));
+                            showToast("Login failed: invalid credentials");
+                        }
+                    }
+                });
+    }
+
+    private void fetchDonorDataAndProceed(String uid) {
+        firestore.collection("donors")
+                .document(uid)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // you got donor data — you can read it:
+                        String name = documentSnapshot.getString("name");
+                        String city = documentSnapshot.getString("city");
+                        String bloodGroup = documentSnapshot.getString("bloodGroup");
+                        String mobile = documentSnapshot.getString("mobile");
+                        // ... other data as needed
+
+                        Log.d(TAG, "Donor data fetched: " + name + ", " + city + ", " + bloodGroup);
+
+                        showToast("Login successful!");
+                        // pass data to MainActivity (or store in SharedPreferences etc.)
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        // optionally put extra data
+                        intent.putExtra("name", name);
+                        intent.putExtra("city", city);
+                        intent.putExtra("bloodGroup", bloodGroup);
+                        intent.putExtra("mobile", mobile);
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        Log.e(TAG, "No donor document for uid: " + uid);
+                        showToast("Login failed: User data not found");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to fetch donor data: " + e.getMessage(), e);
+                    showToast("Login failed: " + e.getMessage());
+                });
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 }
