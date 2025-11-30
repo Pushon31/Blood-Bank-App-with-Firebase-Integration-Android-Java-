@@ -1,5 +1,6 @@
 package com.home.bloodbankapplication.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -39,9 +40,6 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
-
-
 
         initializeFirebaseServices();
         initializeViews();
@@ -100,7 +98,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
         if (!validateInputs(name, city, bloodGroup, password, mobileNumber)) {
             Log.d(TAG, "Registration Failed - Name: " + name + ", Mobile: " + mobileNumber);
-
             return;
         }
 
@@ -118,13 +115,20 @@ public class RegistrationActivity extends AppCompatActivity {
             return false;
         }
 
+        if (password.length() < 6) {
+            showToast("Password must be at least 6 characters");
+            return false;
+        }
+
         return true;
     }
 
     private void registerDonor(String name, String city, String bloodGroup, String password, String mobileNumber) {
-        HashMap<String, Object> donorData = createDonorData(name, city, bloodGroup, password, mobileNumber);
-        Log.d(TAG, "Db instance------: " + mobileNumber);
         String fakeEmail = mobileNumber + "@myapp.com";
+
+        // Show loading state
+        submitButton.setEnabled(false);
+        submitButton.setText("Registering...");
 
         firebaseAuth.createUserWithEmailAndPassword(fakeEmail, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -139,26 +143,21 @@ public class RegistrationActivity extends AppCompatActivity {
                             } else {
                                 Log.e(TAG, "FirebaseUser is null after signup");
                                 showToast("Registration failed: can't get user ID");
+                                submitButton.setEnabled(true);
+                                submitButton.setText("Submit");
                             }
                         } else {
                             Log.e(TAG, "Auth signup failed: " + (task.getException() != null
                                     ? task.getException().getMessage() : ""));
                             showToast("Registration failed: " + (task.getException() != null
                                     ? task.getException().getMessage() : "Unknown error"));
+                            submitButton.setEnabled(true);
+                            submitButton.setText("Submit");
                         }
                     }
                 });
-//        databaseReference.child(mobileNumber).setValue(donorData)
-//                .addOnSuccessListener(aVoid -> {
-//                    Log.d(TAG, "Donor data saved successfully for mobile: " + mobileNumber);
-//                    showToast("Registration Successful!");
-//                    clearFormFields();
-//                })
-//                .addOnFailureListener(e -> {
-//                    Log.e(TAG, "Failed to save donor data: " + e.getMessage());
-//                    showToast("Registration Failed: " + e.getMessage());
-//                });
     }
+
     private void saveDonorInFirestore(String uid,
                                       String name,
                                       String city,
@@ -177,24 +176,30 @@ public class RegistrationActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "Donor data saved successfully for UID: " + uid);
                     showToast("Registration Successful!");
-                    clearFormFields();
+
+                    // Navigate to LoginActivity after successful registration
+                    navigateToLogin();
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to save donor data: " + e.getMessage(), e);
                     showToast("Registration Failed: " + e.getMessage());
+                    submitButton.setEnabled(true);
+                    submitButton.setText("Submit");
                 });
     }
 
-    private HashMap<String, Object> createDonorData(String name, String city, String bloodGroup, String password, String mobileNumber) {
-        HashMap<String, Object> donorData = new HashMap<>();
-        donorData.put("name", name);
-        donorData.put("city", city);
-        donorData.put("bloodGroup", bloodGroup);
-        donorData.put("password", password);
-        donorData.put("mobile", mobileNumber);
-        donorData.put("timestamp", System.currentTimeMillis());
+    private void navigateToLogin() {
+        // Show success message
+        showToast("Registration successful! Please login with your credentials.");
 
-        return donorData;
+        // Navigate to LoginActivity
+        Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+
+        // Clear the back stack so user can't go back to registration with back button
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
+        finish(); // Close the registration activity
     }
 
     private void clearFormFields() {

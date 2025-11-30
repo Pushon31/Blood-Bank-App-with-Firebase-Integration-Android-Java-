@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- For direct SMS functionality -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!-- Declare that telephony hardware is not required (for tablets without SMS) -->
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -12,31 +20,67 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BloodBankApplication">
-        <activity
-            android:name=".Activities.MakeRequestActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.RegistrationActivity"
-            android:exported="false" /> <!-- Splash Screen (Launcher Activity) -->
+        android:theme="@style/Theme.BloodBankApplication"
+        tools:targetApi="31">
+
+        <!-- Splash Screen (Launcher Activity) -->
         <activity
             android:name=".Activities.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Main Activity -->
+        </activity>
+
+        <!-- Main Activity -->
         <activity
             android:name=".Activities.MainActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".Activities.FindDonorsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Activities.LoginActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Activities.RegistrationActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Activities.MakeRequestActivity"
+            android:exported="false" />
+
+        <!-- Placeholder activities for navigation drawer -->
+        <activity
+            android:name=".Activities.MyRequestsActivity"
+            android:exported="false" />
+
+
+
+        <activity
+            android:name=".Activities.BloodBanksActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Activities.ProfileActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Activities.DonationHistoryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Activities.EmergencyContactsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Activities.AboutActivity"
+            android:exported="false" />
 
     </application>
-
 
 </manifest>

@@ -7,11 +7,15 @@ public class RequestDataModel {
     private String time;
     private String contact;
     private String requestId;
+    private String imageUrl;
+    private long timestamp;
+    private String userId; // Add this field
+    private String userEmail; // Add this field
 
     // Default constructor required for Firestore
     public RequestDataModel() {}
 
-    // Getters and setters
+    // Getters and setters for all fields
     public String getMessage() {
         return message;
     }
@@ -58,5 +62,37 @@ public class RequestDataModel {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

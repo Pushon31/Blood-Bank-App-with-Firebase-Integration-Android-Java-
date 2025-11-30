@@ -2,77 +2,125 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        app:cardBackgroundColor="@color/white"
+        android:layout_margin="8dp"
         app:cardCornerRadius="10dp"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/white">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardImage"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_margin="4dp"
-                app:cardCornerRadius="10dp">
-
-                <ImageView
-                    android:id="@+id/request_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/border_background"
-                android:scaleType="fitXY"
-                android:src="@drawable/logo" />
-
-            </androidx.cardview.widget.CardView>
-
-            <TextView
-                android:id="@+id/message_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/cardImage"
-            android:layout_alignTop="@id/cardImage"
-            android:layout_toEndOf="@id/cardImage"
-            android:text="@string/app_name"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:padding="12dp">
 
+            <!-- Image and Text Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Image Container -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardImage"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="12dp"
+                    app:cardCornerRadius="8dp">
+
+                    <ImageView
+                        android:id="@+id/request_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Message Text -->
+                <TextView
+                    android:id="@+id/message_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sample blood request message"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="4dp"
+                    android:maxLines="4"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
+
+            <!-- Divider Line -->
             <View
-                android:id="@+id/black_line"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@id/cardImage"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
                 android:background="@color/black" />
 
-            <ImageView
-                android:id="@+id/call_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@id/black_line"
-                android:layout_margin="8dp"
-                android:src="@drawable/add_call_24" />
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <ImageView
-                android:id="@+id/share_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_below="@id/black_line"
-                android:layout_margin="8dp"
-                android:layout_toStartOf="@id/call_button"
-                android:src="@drawable/sharer_24" />
+                <!-- Delete Button (Visible only for own requests) -->
+                <ImageView
+                    android:id="@+id/delete_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_delete"
+                    android:contentDescription="Delete request"
+                    android:visibility="gone" />
 
-        </RelativeLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textColor="@color/grey_600"
+                    android:textSize="12sp" />
 
-    </androidx.cardview.widget.CardView>
+                <!-- SMS Button -->
+                <ImageView
+                    android:id="@+id/sms_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_sms"
+                    android:contentDescription="Send text message" />
+
+                <!-- Share Button -->
+                <ImageView
+                    android:id="@+id/share_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/sharer_24"
+                    android:contentDescription="Share request" />
+
+                <!-- Call Button -->
+                <ImageView
+                    android:id="@+id/call_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/add_call_24"
+                    android:contentDescription="Call donor" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

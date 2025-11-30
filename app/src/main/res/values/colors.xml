@@ -21,6 +21,10 @@
     <!-- Stats Text Colors -->
     <color name="primary_blue">#FF2196F3</color>
     <color name="primary_yellow">#FFFF9800</color>
+    <color name="light_grey">#F5F5F5</color>
+    <color name="green">#4CAF50</color>
+
+
 
 
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.home.bloodbankapplication.R;
 public class LoginActivity extends AppCompatActivity {
     private EditText mobileEt, passwordEt;
     private Button loginButton;
+    private TextView signUpText; // Add this
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
 
@@ -30,14 +32,23 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Initialize views
         mobileEt = findViewById(R.id.username);     // your EditText id
         passwordEt = findViewById(R.id.password);   // your EditText id
         loginButton = findViewById(R.id.login_button);
+        signUpText = findViewById(R.id.sign_up_text); // Initialize sign up text
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
         loginButton.setOnClickListener(v -> performLogin());
+
+        // Add click listener for sign up text
+        signUpText.setOnClickListener(v -> {
+            // Navigate to RegistrationActivity
+            Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void performLogin() {
