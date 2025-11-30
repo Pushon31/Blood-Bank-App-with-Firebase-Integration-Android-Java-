@@ -31,7 +31,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    // এইটা add করুন
+
     buildFeatures {
         viewBinding = true
     }

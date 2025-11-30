@@ -85,12 +85,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/make_request_button"
+        android:layout_height="0dp"
         android:layout_below="@id/section_title"
+        android:layout_above="@id/make_request_button"
         android:layout_marginTop="8dp"
-        android:clipToPadding="false"
-        android:padding="8dp" />
+        android:layout_marginBottom="8dp"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false" />
 
     <!-- Make Request Button -->
     <com.google.android.material.button.MaterialButton

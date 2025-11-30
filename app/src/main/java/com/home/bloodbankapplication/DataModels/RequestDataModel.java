@@ -2,39 +2,61 @@ package com.home.bloodbankapplication.DataModels;
 
 public class RequestDataModel {
     private String message;
-    private String imageUrl;
-    private long timestamp;
+    private String bloodType;
+    private String location;
+    private String time;
+    private String contact;
+    private String requestId;
 
-    // Public no‑arg constructor
-    public RequestDataModel() {
-    }
+    // Default constructor required for Firestore
+    public RequestDataModel() {}
 
-    // Optionally parameterized constructor
-    public RequestDataModel(String message, String imageUrl, long timestamp) {
-        this.message = message;
-        this.imageUrl = imageUrl;
-        this.timestamp = timestamp;
-    }
-
-    // Getters & setters
+    // Getters and setters
     public String getMessage() {
         return message;
     }
+
     public void setMessage(String message) {
         this.message = message;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public String getBloodType() {
+        return bloodType;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public void setBloodType(String bloodType) {
+        this.bloodType = bloodType;
     }
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }
