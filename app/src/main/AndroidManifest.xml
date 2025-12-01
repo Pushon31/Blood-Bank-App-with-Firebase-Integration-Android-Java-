@@ -12,6 +12,11 @@
     <!-- Declare that telephony hardware is not required (for tablets without SMS) -->
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
 
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
